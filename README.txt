@@ -1,6 +1,6 @@
 # Transfer-Learning-for-Binary-Classification---Pytorch
 
-# How to Organize the Folders for Transfer learning: 
+# How to Organize the Folders for Transfer learning: Organization folder.txt
 
 # Main Code: Main_Code.py
 
