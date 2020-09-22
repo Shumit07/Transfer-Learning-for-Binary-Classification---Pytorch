@@ -27,6 +27,40 @@ def binary_acc(y_pred, y_test):
     acc = torch.round(acc * 100)
     return acc 
     
+# Load the model
+import torchvision.models as models
+model = models.vgg19(pretrained=True)
+for param in model.parameters():
+    param.requires_grad = False
+    
+# Change the top layer for binary classification, you can add more layers here if necessary (See the Model Tuning script for different models)
+# For Vgg19:
+model.classifier[6] = nn.Sequential(
+                      nn.Linear(4096, 256), 
+                      nn.ReLU(), 
+                      nn.Dropout(0.4),
+                      nn.Linear(256, 2),                   
+                      nn.LogSoftmax(dim=1))
+model.classifier
+
+# model to device
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+model.to(device)
+
+# Find total parameters and trainable parameters
+total_params = sum(p.numel() for p in model.parameters())
+print(f'{total_params:,} total parameters.')
+total_trainable_params = sum(
+    p.numel() for p in model.parameters() if p.requires_grad)
+print(f'{total_trainable_params:,} training parameters.')
+
+# Define class weight if necessary. Otherwise use default. 
+weights = [1.4, 0.2]
+class_weights=torch.FloatTensor(weights).cuda()
+criterion = nn.CrossEntropyLoss(weight=class_weights)
+optimizer = optim.Adam(model.parameters())
+
+# Main Code
 # Data loader and transformaiton    
 image_transforms = {
     "train": transforms.Compose([
@@ -57,41 +91,7 @@ val_sampler = SubsetRandomSampler(val_idx)
 train_loader = DataLoader(dataset=train_dataset, shuffle=False, batch_size=32, sampler=train_sampler)
 val_loader = DataLoader(dataset=train_dataset, shuffle=False, batch_size=1, sampler=val_sampler)
 
-# Load the model
-import torchvision.models as models
-model = models.vgg19(pretrained=True)
-for param in model.parameters():
-    param.requires_grad = False
-    
-# Change the top layer for binary classification, you can add more layers here if necessary (See the next script for different models)
-# For Vgg16 or Vgg19:
-model.classifier[6] = nn.Sequential(
-                      nn.Linear(4096, 256), 
-                      nn.ReLU(), 
-                      nn.Dropout(0.4),
-                      nn.Linear(256, 2),                   
-                      nn.LogSoftmax(dim=1))
-model.classifier
-
-# model to device
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
-model.to(device)
-
-# Find total parameters and trainable parameters
-total_params = sum(p.numel() for p in model.parameters())
-print(f'{total_params:,} total parameters.')
-total_trainable_params = sum(
-    p.numel() for p in model.parameters() if p.requires_grad)
-print(f'{total_trainable_params:,} training parameters.')
-
-# Define class weight if necessary. Otherwise use default. 
-weights = [1.4, 0.2]
-class_weights=torch.FloatTensor(weights).cuda()
-criterion = nn.CrossEntropyLoss(weight=class_weights)
-optimizer = optim.Adam(model.parameters())
-
 # Train Model
-
 accuracy_stats = {
     'train': [],
     "val": []
