@@ -1,0 +1,13 @@
+How to organize the images in folder for classification
+
+Let's assume your dataset in drive 'C:/'
+
+You need to create folders as follows:
+
+Train Dataset
+C:/ Train Set/ Class 0: Put all Class 0 images in this folder
+C:/ Train Set/ Class 1: Put all Class 1 images in this folder
+
+Test DataSet
+C:/ Test Set/ Class 0: Put all Class 0 images in this folder
+C:/ Test Set/ Class 1: Put all Class 1 images in this folder
