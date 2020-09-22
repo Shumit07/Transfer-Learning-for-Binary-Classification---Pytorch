@@ -2,6 +2,6 @@
 
 # How to Organize the Folders for Transfer learning: 
 
-# Main Code: Main_Code
+# Main Code: Main_Code.py
 
-# TF for different models: TF_Codes
+# TF for different models: TF_Codes.py
