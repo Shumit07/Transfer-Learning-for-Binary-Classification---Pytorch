@@ -71,7 +71,7 @@ image_transforms = {
         transforms.ToTensor()]),
         }
 
-# Place the train and test file directions in the root
+# Place the train and test file directories in the root (Check the organization folder text file for details)
 train_dataset = datasets.ImageFolder(root ="",
                                       transform = image_transforms["train"]
                                      )   
@@ -82,7 +82,7 @@ test_dataset = datasets.ImageFolder(root ="",
 dataset_size = len(train_dataset)
 dataset_indices = list(range(dataset_size))
 np.random.shuffle(dataset_indices)
-val_split_index = int(np.floor(0.1 * dataset_size)) 
+val_split_index = int(np.floor(0.1 * dataset_size)) # 10% validation
 train_idx, val_idx = dataset_indices[val_split_index:], dataset_indices[:val_split_index]
 train_sampler = SubsetRandomSampler(train_idx)
 val_sampler = SubsetRandomSampler(val_idx)
