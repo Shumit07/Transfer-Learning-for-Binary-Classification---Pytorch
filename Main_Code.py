@@ -54,9 +54,11 @@ total_trainable_params = sum(
     p.numel() for p in model.parameters() if p.requires_grad)
 print(f'{total_trainable_params:,} training parameters.')
 
-# Define class weight if necessary. Otherwise use default. 
-weights = [1.4, 0.2]
+# Define class weight if necessary. Otherwise use default
+weights = [1, 0.5] # 1 weight for class 0 and 0.5 weight for class 1
 class_weights=torch.FloatTensor(weights).cuda()
+
+# Define loss function and optimizer
 criterion = nn.CrossEntropyLoss(weight=class_weights)
 optimizer = optim.Adam(model.parameters())
 
